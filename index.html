@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Portafolio profesional de Diego Adones: economía, análisis de datos y política pública.">
+  <meta name="description" content="Portafolio profesional: economía, análisis de datos y política pública.">
   <title>Economía y Datos</title>
   <link rel="stylesheet" href="assets/css/styles.css?v=6">
 </head>
@@ -12,9 +12,10 @@
   <header class="site-header">
     <div class="container nav">
       <nav class="nav-links" aria-label="Navegación principal">
-        <a href="#sobre-mi">Perfil</a>
-        <a href="#experiencia">Experiencia</a>
-        <a href="#contacto">Contacto</a>
+        <a href="#sobre-mi" data-es="Perfil" data-en="Profile">Perfil</a>
+        <a href="#experiencia" data-es="Experiencia" data-en="Experience">Experiencia</a>
+        <a href="#contacto" data-es="Contacto" data-en="Contact">Contacto</a>
+        <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Cambiar idioma">EN</button>
       </nav>
     </div>
   </header>
@@ -26,44 +27,35 @@
           <div class="photo-circle">
             <img src="assets/img/profile.jpg" alt="Foto de perfil">
           </div>
-          <button class="button primary cv-button" type="button">CV actualizado</button>
+          <button class="button primary cv-button" type="button" data-es="CV actualizado" data-en="Updated CV">CV actualizado</button>
         </div>
       </div>
     </section>
 
     <section id="sobre-mi">
       <div class="container">
-        <p class="section-intro">
-          Me interesa trabajar en la intersección entre economía aplicada, datos y toma de decisiones.
-          Este portafolio reúne proyectos que muestran cómo abordo problemas de análisis, automatización,
-          calidad de datos y comunicación de resultados.
+        <p class="section-intro" data-es="Me interesa trabajar en la intersección entre economía aplicada, datos y toma de decisiones. Este portafolio reúne proyectos que muestran cómo abordo problemas de análisis, automatización, calidad de datos y comunicación de resultados." data-en="I am interested in working at the intersection of applied economics, data, and decision-making. This portfolio brings together work that shows how I approach analysis, automation, data quality, and the communication of results.">
+          Me interesa trabajar en la intersección entre economía aplicada, datos y toma de decisiones. Este portafolio reúne proyectos que muestran cómo abordo problemas de análisis, automatización, calidad de datos y comunicación de resultados.
         </p>
       </div>
     </section>
 
     <section id="experiencia">
       <div class="container">
-        <h2>Experiencia</h2>
+        <h2 data-es="Experiencia" data-en="Experience">Experiencia</h2>
         <div class="timeline">
           <article>
             <img class="institution-logo" src="assets/img/images (1).jpeg" alt="Logo Subsecretaría de Evaluación Social">
-            <p class="meta">Marzo – julio 2026</p>
-            <h3>Práctica profesional · Subsecretaría de Evaluación Social</h3>
-            <p>
-              Desarrollo de herramientas reproducibles para perfilado y análisis exploratorio de datos,
-              generación de reportes y apoyo a la documentación de información administrativa.
-            </p>
+            <p class="meta" data-es="Marzo – julio 2026" data-en="March – July 2026">Marzo – julio 2026</p>
+            <h3 data-es="Práctica profesional · Subsecretaría de Evaluación Social" data-en="Professional Internship · Undersecretariat of Social Evaluation">Práctica profesional · Subsecretaría de Evaluación Social</h3>
+            <p data-es="Desarrollo de herramientas reproducibles para perfilado y análisis exploratorio de datos, generación de reportes y apoyo a la documentación de información administrativa." data-en="Development of reproducible tools for data profiling and exploratory data analysis, report generation, and documentation of administrative data.">Desarrollo de herramientas reproducibles para perfilado y análisis exploratorio de datos, generación de reportes y apoyo a la documentación de información administrativa.</p>
           </article>
 
           <article>
             <img class="institution-logo" src="assets/img/images (2).jpeg" alt="Logo ChileCompra">
-            <p class="meta">Diciembre 2024 – febrero 2025</p>
-            <h3>Práctica intermedia · Dirección de Compras y Contrataciones Públicas</h3>
-            <p>
-              Análisis de información administrativa para la construcción del Índice de Gestión en Compras Públicas.
-              Elaboración de reportes estadísticos con SQL, R y Quarto, apoyo en la documentación del índice y actualización
-              de guías de uso de la plataforma ante cambios regulatorios en compras públicas.
-            </p>
+            <p class="meta" data-es="Diciembre 2024 – febrero 2025" data-en="December 2024 – February 2025">Diciembre 2024 – febrero 2025</p>
+            <h3 data-es="Práctica intermedia · Dirección de Compras y Contrataciones Públicas" data-en="Internship · Public Procurement and Contracting Directorate">Práctica intermedia · Dirección de Compras y Contrataciones Públicas</h3>
+            <p data-es="Análisis de información administrativa para la construcción del Índice de Gestión en Compras Públicas. Elaboración de reportes estadísticos con SQL, R y Quarto, apoyo en la documentación del índice y actualización de guías de uso de la plataforma ante cambios regulatorios en compras públicas." data-en="Analysis of administrative data for the development of the Public Procurement Management Index. Preparation of statistical reports using SQL, R, and Quarto, support for index documentation, and updates to platform user guides following regulatory changes in public procurement.">Análisis de información administrativa para la construcción del Índice de Gestión en Compras Públicas. Elaboración de reportes estadísticos con SQL, R y Quarto, apoyo en la documentación del índice y actualización de guías de uso de la plataforma ante cambios regulatorios en compras públicas.</p>
           </article>
         </div>
       </div>
@@ -71,11 +63,8 @@
 
     <section id="contacto">
       <div class="container">
-        <h2>Contacto</h2>
-        <p class="section-intro">
-          Para revisar código y proyectos públicos, visita mi perfil de GitHub. Otros datos de contacto
-          no se publican directamente en este sitio.
-        </p>
+        <h2 data-es="Contacto" data-en="Contact">Contacto</h2>
+        <p class="section-intro" data-es="Para revisar código y proyectos públicos, visita mi perfil de GitHub. Otros datos de contacto no se publican directamente en este sitio." data-en="To review public code and projects, visit my GitHub profile. Other contact details are not published directly on this site.">Para revisar código y proyectos públicos, visita mi perfil de GitHub. Otros datos de contacto no se publican directamente en este sitio.</p>
         <div class="actions">
           <a class="button primary" href="https://github.com/dadones" rel="noopener noreferrer">github.com/dadones</a>
         </div>
@@ -85,8 +74,22 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>© 2026. Portafolio profesional.</p>
+      <p data-es="© 2026. Portafolio profesional." data-en="© 2026. Professional portfolio.">© 2026. Portafolio profesional.</p>
     </div>
   </footer>
+
+  <script>
+    const toggle = document.getElementById('lang-toggle');
+    toggle.addEventListener('click', () => {
+      const lang = document.documentElement.lang === 'es' ? 'en' : 'es';
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-es][data-en]').forEach(el => {
+        el.textContent = el.dataset[lang];
+      });
+      toggle.textContent = lang === 'es' ? 'EN' : 'ES';
+      toggle.setAttribute('aria-label', lang === 'es' ? 'Cambiar a inglés' : 'Switch to Spanish');
+      document.title = lang === 'es' ? 'Economía y Datos' : 'Economics and Data';
+    });
+  </script>
 </body>
 </html>
