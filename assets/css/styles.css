@@ -58,7 +58,7 @@ a { color: inherit; }
 
 .hero {
   padding: 64px 0;
-  border-bottom: 1px solid var(--text);
+  border-bottom: 0;
 }
 
 .hero .container { display: block; }
@@ -66,10 +66,11 @@ a { color: inherit; }
 .hero-layout {
   display: flex !important;
   align-items: center;
+  justify-content: center;
 }
 
 .photo-circle {
-  width: clamp(112px, 20vw, 170px);
+  width: clamp(150px, 22vw, 190px);
   aspect-ratio: 1 / 1;
   height: auto;
   flex: 0 0 auto;
@@ -236,9 +237,9 @@ h3 {
     gap: 12px;
   }
   .nav-links { gap: 12px 16px; }
-  .hero { padding: 40px 0; }
+  .hero { padding: 48px 0; }
   .photo-circle {
-    width: min(38vw, 138px);
+    width: min(46vw, 170px);
   }
   section { padding: 58px 0; }
   section .container { display: block; }
