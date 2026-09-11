@@ -57,15 +57,50 @@ a { color: inherit; }
 .nav-links a:hover { color: var(--accent); }
 
 .hero {
-  min-height: 72vh;
+  min-height: 58vh;
   display: flex;
   align-items: center;
-  padding: 100px 0 90px;
+  padding: 86px 0 78px;
   border-bottom: 1px solid var(--text);
 }
 
+.hero .container { display: block; }
+
+.hero-layout {
+  display: grid !important;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 46px;
+  align-items: center;
+}
+
+.photo-circle {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  border: 1px solid var(--text);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: "Courier New", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.photo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-copy { max-width: 700px; }
+
 .eyebrow {
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   color: var(--accent);
   font-size: 0.78rem;
   font-weight: 700;
@@ -78,22 +113,16 @@ h1, h2, h3 {
   font-weight: 500;
 }
 
-h1 {
-  margin: 0;
-  max-width: 920px;
-  font-size: clamp(3rem, 7vw, 6.7rem);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
-}
-
 .lead {
   max-width: 680px;
-  margin: 34px 0 0;
-  font-size: 1.08rem;
-  color: var(--muted);
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 2.7vw, 2rem);
+  line-height: 1.42;
+  color: var(--text);
 }
 
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
 .button {
   display: inline-block;
   padding: 11px 17px;
@@ -120,8 +149,6 @@ section .container {
   grid-template-columns: minmax(160px, 0.32fr) minmax(0, 1fr);
   column-gap: 64px;
 }
-
-.hero .container { display: block; }
 
 h2 {
   margin: 0;
@@ -236,8 +263,17 @@ h3 {
     gap: 12px;
   }
   .nav-links { gap: 12px 16px; }
-  .hero { min-height: auto; padding: 76px 0 66px; }
-  h1 { font-size: clamp(2.8rem, 13vw, 4.6rem); }
+  .hero { min-height: auto; padding: 66px 0 58px; }
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    justify-items: start;
+  }
+  .photo-circle {
+    width: 138px;
+    height: 138px;
+  }
+  .lead { font-size: clamp(1.35rem, 6vw, 1.75rem); }
   section { padding: 58px 0; }
   section .container { display: block; }
   h2 { margin-bottom: 30px; }
