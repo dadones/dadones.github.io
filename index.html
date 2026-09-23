@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Portafolio profesional: economía, análisis de datos y política pública.">
   <title>Economía y Datos</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=7">
+  <script src="assets/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=8">
 </head>
 <body>
   <header class="site-header">
@@ -15,8 +17,14 @@
         <a href="#sobre-mi" data-es="Perfil" data-en="Profile">Perfil</a>
         <a href="#experiencia" data-es="Experiencia" data-en="Experience">Experiencia</a>
         <a href="#contacto" data-es="Contacto" data-en="Contact">Contacto</a>
-        <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Cambiar idioma">EN</button>
       </nav>
+      <div class="header-controls">
+        <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Cambiar a inglés">EN</button>
+        <button class="theme-toggle" id="theme-toggle" type="button" role="switch" aria-checked="false" hidden>
+          <span data-es="Modo oscuro" data-en="Dark mode">Modo oscuro</span>
+          <span class="theme-switch" aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
   </header>
 
