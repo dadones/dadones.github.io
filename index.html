@@ -157,7 +157,7 @@
         while (particles.length < count) {
           const vx = (Math.random() < .5 ? -1 : 1) * (8 + Math.random() * 10);
           const vy = (Math.random() < .5 ? -1 : 1) * (6 + Math.random() * 8);
-          particles.push({ x: Math.random() * width, y: Math.random() * height, vx, vy, baseVx: vx, baseVy: vy, radius: 1 + Math.random() * 1.4 });
+          particles.push({ x: Math.random() * width, y: Math.random() * height, vx, vy, baseVx: vx, baseVy: vy, radius: 2 + Math.random() * 2 });
         }
         draw(0);
       }
@@ -166,7 +166,7 @@
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       }
       function draw(dt) {
-        ctx.clearRect(0, 0, width, height); ctx.lineWidth = .7;
+        ctx.clearRect(0, 0, width, height); ctx.lineWidth = 1.2;
         particles.forEach(p => {
           // Recover the original drift smoothly after leaving the interaction radius.
           const recovery = 1 - Math.exp(-2 * dt);
