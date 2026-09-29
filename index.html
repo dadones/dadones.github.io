@@ -13,15 +13,21 @@
     .construction-notice { padding: 12px 0; background: var(--surface); border-bottom: 1px solid var(--border); text-align: center; }
     .construction-notice p { margin: 0; font-size: 0.9rem; font-weight: 700; }
 
-    .hero { position: relative; isolation: isolate; overflow: hidden; background: #000; }
-    .hero-particles { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-    .hero .photo-circle { border-color: #a3a3a3; box-shadow: 0 0 40px rgba(255,255,255,.08); }
-    .hero .button { color: #eee; border-color: #777; background: rgba(0,0,0,.65); }
-    .hero .button.primary, .hero .button:hover { color: #000; background: #eee; border-color: #eee; }
-    .hero .button:focus-visible { outline-color: #fff; }
+
+    body { position: relative; isolation: isolate; }
+    .page-particles { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+    :root[data-theme="dark"] { --bg: #000; --header-bg: rgba(0,0,0,.96); }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) { --bg: #000; --header-bg: rgba(0,0,0,.96); }
+    }
+    .hero { position: relative; }
+    .hero .photo-circle { box-shadow: 0 0 36px rgba(128,128,128,.12); }
+    .hero .button { background: var(--bg); }
+    .hero .button.primary, .hero .button:hover { background: var(--text); color: var(--surface); }
   </style>
 </head>
 <body>
+  <canvas class="page-particles" id="page-particles" aria-hidden="true"></canvas>
   <header class="site-header">
     <div class="container nav">
       <nav class="nav-links" aria-label="Navegación principal">
@@ -47,7 +53,6 @@
 
   <main>
     <section class="hero" id="inicio">
-      <canvas class="hero-particles" id="profile-particles" aria-hidden="true"></canvas>
       <div class="container hero-layout">
         <div class="hero-profile">
           <div class="photo-circle">
@@ -122,74 +127,104 @@
     });
   </script>
 
-  <script>
+<script>
     (() => {
-      const hero = document.getElementById('inicio');
-      const canvas = document.getElementById('profile-particles');
+      const canvas = document.getElementById('page-particles');
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-      let width = 0, height = 0, particles = [], frame = null, last = 0, visible = true;
+      let width = 0, height = 0, particles = [], frame = null, last = null;
+      let ink = '17,17,17', dotOpacity = .28, linkOpacity = .12;
       const pointer = { x: 0, y: 0, active: false };
+      function theme() {
+        const dark = document.documentElement.dataset.theme === 'dark' ||
+          (!document.documentElement.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        ink = dark ? '255,255,255' : '17,17,17';
+        dotOpacity = dark ? .45 : .28;
+        linkOpacity = dark ? .22 : .12;
+        draw(0);
+      }
       function resize() {
-        width = hero.clientWidth;
-        height = hero.clientHeight;
+        const nextWidth = window.innerWidth, nextHeight = window.innerHeight;
+        if (width === nextWidth && height === nextHeight) return;
+        const oldWidth = width, oldHeight = height;
+        width = nextWidth; height = nextHeight;
         const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.round(width * ratio);
-        canvas.height = Math.round(height * ratio);
+        canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
         ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-        particles = Array.from({ length: Math.min(40, Math.max(22, Math.round(width / 30))) }, () => ({
-          x: Math.random() * width, y: Math.random() * height,
-          vx: (Math.random() < .5 ? -1 : 1) * (8 + Math.random() * 10),
-          vy: (Math.random() < .5 ? -1 : 1) * (6 + Math.random() * 8),
-          radius: 1 + Math.random() * 1.6
-        }));
+        particles.forEach(p => { p.x *= width / oldWidth; p.y *= height / oldHeight; });
+        const count = Math.min(65, Math.max(28, Math.round(width * height / 20000)));
+        particles.length = Math.min(particles.length, count);
+        while (particles.length < count) {
+          const vx = (Math.random() < .5 ? -1 : 1) * (8 + Math.random() * 10);
+          const vy = (Math.random() < .5 ? -1 : 1) * (6 + Math.random() * 8);
+          particles.push({ x: Math.random() * width, y: Math.random() * height, vx, vy, baseVx: vx, baseVy: vy, radius: 1 + Math.random() * 1.4 });
+        }
         draw(0);
       }
       function line(a, b, distance, limit, opacity) {
-        ctx.strokeStyle = 'rgba(255,255,255,' + opacity * (1 - distance / limit) + ')';
+        ctx.strokeStyle = 'rgba(' + ink + ',' + opacity * (1 - distance / limit) + ')';
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       }
       function draw(dt) {
-        ctx.clearRect(0, 0, width, height);
-        ctx.lineWidth = .7;
+        ctx.clearRect(0, 0, width, height); ctx.lineWidth = .7;
         particles.forEach(p => {
+          // Recover the original drift smoothly after leaving the interaction radius.
+          const recovery = 1 - Math.exp(-2 * dt);
+          p.vx += (p.baseVx - p.vx) * recovery;
+          p.vy += (p.baseVy - p.vy) * recovery;
+          if (pointer.active) {
+            const dx = p.x - pointer.x, dy = p.y - pointer.y;
+            const distance = Math.hypot(dx, dy);
+            if (distance < 150) {
+              const force = 220 * (1 - distance / 150) * dt;
+              p.vx += (distance > .01 ? dx / distance : 1) * force;
+              p.vy += (distance > .01 ? dy / distance : 0) * force;
+            }
+          }
+          const speed = Math.hypot(p.vx, p.vy);
+          if (speed > 100) { p.vx *= 100 / speed; p.vy *= 100 / speed; }
           p.x = (p.x + p.vx * dt + width) % width;
           p.y = (p.y + p.vy * dt + height) % height;
-          ctx.fillStyle = 'rgba(255,255,255,.55)';
+          ctx.fillStyle = 'rgba(' + ink + ',' + dotOpacity + ')';
           ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
         });
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const distance = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
-            if (distance < 170) line(particles[i], particles[j], distance, 170, .32);
+            if (distance < 170) line(particles[i], particles[j], distance, 170, linkOpacity);
           }
           if (pointer.active) {
             const distance = Math.hypot(particles[i].x - pointer.x, particles[i].y - pointer.y);
-            if (distance < 200) line(particles[i], pointer, distance, 200, .65);
+            if (distance < 180) line(particles[i], pointer, distance, 180, linkOpacity * 1.5);
           }
         }
       }
       function animate(time) {
-        draw(last ? Math.min((time - last) / 1000, .05) : 0);
-        last = time;
-        frame = requestAnimationFrame(animate);
+        draw(last === null ? 0 : Math.min((time - last) / 1000, .05));
+        last = time; frame = requestAnimationFrame(animate);
       }
       function sync() {
         if (frame !== null) cancelAnimationFrame(frame);
-        frame = null; last = 0;
-        if (visible && !document.hidden) frame = requestAnimationFrame(animate);
-        else draw(0);
+        frame = null; last = null;
+        if (!document.hidden) frame = requestAnimationFrame(animate);
       }
-      hero.addEventListener('pointermove', event => {
-        const rect = hero.getBoundingClientRect();
-        pointer.x = event.clientX - rect.left; pointer.y = event.clientY - rect.top; pointer.active = true;
-      }, { passive: true });
-      ['pointerleave', 'pointerup', 'pointercancel'].forEach(type => hero.addEventListener(type, () => { pointer.active = false; }));
-      new ResizeObserver(resize).observe(hero);
-      new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }).observe(hero);
+      function track(event) {
+        pointer.x = event.clientX; pointer.y = event.clientY; pointer.active = true;
+      }
+      window.addEventListener('pointermove', track, { passive: true });
+      window.addEventListener('pointerdown', track, { passive: true });
+      window.addEventListener('pointerup', event => { if (event.pointerType !== 'mouse') pointer.active = false; });
+      window.addEventListener('pointercancel', () => { pointer.active = false; });
+      document.documentElement.addEventListener('pointerleave', () => { pointer.active = false; });
+      window.addEventListener('blur', () => { pointer.active = false; });
+      window.addEventListener('scroll', () => { pointer.active = false; }, { passive: true });
+      window.addEventListener('resize', resize, { passive: true });
       document.addEventListener('visibilitychange', sync);
-      resize(); sync();
+      new MutationObserver(theme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', theme);
+      resize(); theme(); sync();
     })();
   </script>
+
 </body>
 </html>
