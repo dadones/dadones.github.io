@@ -128,7 +128,6 @@
       const canvas = document.getElementById('profile-particles');
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-      const motion = matchMedia('(prefers-reduced-motion: reduce)');
       let width = 0, height = 0, particles = [], frame = null, last = 0, visible = true;
       const pointer = { x: 0, y: 0, active: false };
       function resize() {
@@ -140,7 +139,8 @@
         ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
         particles = Array.from({ length: Math.min(40, Math.max(22, Math.round(width / 30))) }, () => ({
           x: Math.random() * width, y: Math.random() * height,
-          vx: (Math.random() - .5) * 14, vy: (Math.random() - .5) * 14,
+          vx: (Math.random() < .5 ? -1 : 1) * (8 + Math.random() * 10),
+          vy: (Math.random() < .5 ? -1 : 1) * (6 + Math.random() * 8),
           radius: 1 + Math.random() * 1.6
         }));
         draw(0);
@@ -163,7 +163,7 @@
             const distance = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
             if (distance < 170) line(particles[i], particles[j], distance, 170, .32);
           }
-          if (pointer.active && !motion.matches) {
+          if (pointer.active) {
             const distance = Math.hypot(particles[i].x - pointer.x, particles[i].y - pointer.y);
             if (distance < 200) line(particles[i], pointer, distance, 200, .65);
           }
@@ -177,7 +177,7 @@
       function sync() {
         if (frame !== null) cancelAnimationFrame(frame);
         frame = null; last = 0;
-        if (visible && !document.hidden && !motion.matches) frame = requestAnimationFrame(animate);
+        if (visible && !document.hidden) frame = requestAnimationFrame(animate);
         else draw(0);
       }
       hero.addEventListener('pointermove', event => {
@@ -188,7 +188,6 @@
       new ResizeObserver(resize).observe(hero);
       new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }).observe(hero);
       document.addEventListener('visibilitychange', sync);
-      motion.addEventListener('change', sync);
       resize(); sync();
     })();
   </script>
