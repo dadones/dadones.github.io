@@ -33,6 +33,8 @@
     #sobre-mi, #experiencia, #contacto {
       position: relative;
       width: 100%;
+      margin-block: clamp(40px, 6vw, 80px);
+      border-top: 1px solid var(--reading-border);
       background: var(--reading-panel);
       border-bottom: 1px solid var(--reading-border);
       backdrop-filter: blur(3px);
@@ -44,14 +46,10 @@
     #experiencia .timeline article { border-color: var(--reading-border); }
     #experiencia .timeline article:first-child { padding-top: 0; border-top: 0; }
     #experiencia .timeline article:last-child { padding-bottom: 0; }
-    .section-enter { animation: section-enter 800ms cubic-bezier(.22,1,.36,1) both; }
-    @keyframes section-enter {
-      from { opacity: .35; transform: translateY(32px); }
+    .text-enter { animation: text-enter 850ms cubic-bezier(.22,1,.36,1) both; }
+    @keyframes text-enter {
+      from { opacity: 0; transform: translateY(28px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .section-enter { animation: none; }
     }
   </style>
 </head>
@@ -259,14 +257,21 @@
   <script>
     (() => {
       if (!('IntersectionObserver' in window)) return;
+      const elements = document.querySelectorAll(
+        '#sobre-mi .section-intro, #experiencia h2, #experiencia .meta, #experiencia h3, #experiencia article p:not(.meta), #contacto h2, #contacto .section-intro, #contacto .actions'
+      );
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('section-enter');
-          observer.unobserve(entry.target);
+          if (entry.isIntersecting) {
+            entry.target.classList.add('text-enter');
+          } else {
+            // Re-arm only after the text has completely left the viewport.
+            const rect = entry.target.getBoundingClientRect();
+            if (rect.bottom <= 0 || rect.top >= window.innerHeight) entry.target.classList.remove('text-enter');
+          }
         });
-      }, { threshold: .08, rootMargin: '0px 0px -24px 0px' });
-      document.querySelectorAll('#sobre-mi > .container, #experiencia > .container, #contacto > .container').forEach(element => observer.observe(element));
+      }, { threshold: 0, rootMargin: '0px 0px -32px 0px' });
+      elements.forEach(element => observer.observe(element));
     })();
   </script>
 </body>
