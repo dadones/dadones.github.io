@@ -24,6 +24,34 @@
     .hero .photo-circle { box-shadow: 0 0 36px rgba(128,128,128,.12); }
     .hero .button { background: var(--bg); }
     .hero .button.primary, .hero .button:hover { background: var(--text); color: var(--surface); }
+
+    :root { --reading-panel: #e8e9eb; --reading-border: #cbd0d6; --reading-shadow: 0 12px 36px rgba(20,25,35,.07); }
+    :root[data-theme="dark"] { --reading-panel: #22252a; --reading-border: #3c424b; --reading-shadow: 0 12px 36px rgba(0,0,0,.24); }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) { --reading-panel: #22252a; --reading-border: #3c424b; --reading-shadow: 0 12px 36px rgba(0,0,0,.24); }
+    }
+    #sobre-mi > .container, #experiencia > .container, #contacto > .container {
+      position: relative;
+      background: var(--reading-panel);
+      border: 1px solid var(--reading-border);
+      border-radius: 20px;
+      padding: clamp(24px, 4vw, 48px);
+      box-shadow: var(--reading-shadow);
+    }
+    #experiencia .timeline article { border-color: var(--reading-border); }
+    #experiencia .timeline article:first-child { padding-top: 0; border-top: 0; }
+    #experiencia .timeline article:last-child { padding-bottom: 0; }
+    .section-enter { animation: section-enter 650ms cubic-bezier(.22,1,.36,1) both; }
+    @keyframes section-enter {
+      from { opacity: .65; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 760px) {
+      #sobre-mi > .container, #experiencia > .container, #contacto > .container { border-radius: 16px; padding: 24px 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .section-enter { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -226,5 +254,19 @@
     })();
   </script>
 
+
+  <script>
+    (() => {
+      if (!('IntersectionObserver' in window)) return;
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('section-enter');
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: .08, rootMargin: '0px 0px -24px 0px' });
+      document.querySelectorAll('#sobre-mi > .container, #experiencia > .container, #contacto > .container').forEach(element => observer.observe(element));
+    })();
+  </script>
 </body>
 </html>
